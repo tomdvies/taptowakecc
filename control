@@ -1,0 +1,9 @@
+Package: com.tmded.taptowakecc
+Name: TapToWakeCC
+Depends: mobilesubstrate
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: Thomas Davies
+Author: Thomas Davies
+Section: Tweaks
