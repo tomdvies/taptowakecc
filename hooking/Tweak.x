@@ -1,33 +1,16 @@
 BOOL blocking = NO;
 
+NSUserDefaults *userDefaults = nil;
+
 %hook SBLockScreenManager
 - (void)_wakeScreenForTapToWake{
     //RLog(@"damn");
-    if (!blocking) %orig;
+    if (![userDefaults boolForKey:@"com.tmded.taptowakecc.enabled"]) %orig;
     return;
 }
 %end
 
-void enable(){
-    blocking=YES;
-}
-
-void disable(){
-    blocking=NO;
-}
 
 %ctor{
-    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
-                                    NULL,
-                                    (CFNotificationCallback)enable,
-                                    CFSTR("com.tmded.taptowakecc.enable"),
-                                    NULL,
-                                    CFNotificationSuspensionBehaviorDeliverImmediately);
-
-    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
-            NULL,
-            (CFNotificationCallback)disable,
-            CFSTR("com.tmded.taptowakecc.disable"),
-            NULL,
-            CFNotificationSuspensionBehaviorDeliverImmediately);
+    userDefaults = [NSUserDefaults standardUserDefaults];
 }

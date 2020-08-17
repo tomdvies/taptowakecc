@@ -5,6 +5,7 @@
 @end
 
 BOOL blocking=NO;
+NSUserDefaults *userDefaults = nil;
 
 @implementation CTXTestModule
 - (UIImage *)iconGlyph {
@@ -16,13 +17,15 @@ BOOL blocking=NO;
 }
 
 - (BOOL)isSelected {
-	return self.fakeEnabledSetting;
+    if (userDefaults == nil) userDefaults = [NSUserDefaults standardUserDefaults];
+    BOOL enabled =  [userDefaults boolForKey:@"com.tmded.taptowakecc.enabled"];
+    return enabled;
 }
 
 - (void)setSelected:(BOOL)selected{
-	self.fakeEnabledSetting = selected;
-    if (selected)CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.tmded.taptowakecc.enable"), NULL, NULL, YES);
-    else CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.tmded.taptowakecc.disable"), NULL, NULL, YES);
+    if (userDefaults == nil) userDefaults = [NSUserDefaults standardUserDefaults];
+	[userDefaults setBool:selected forKey: @"com.tmded.taptowakecc.enabled"];
+    self.fakeEnabledSetting = selected;
     [super refreshState];
 }
 @end
